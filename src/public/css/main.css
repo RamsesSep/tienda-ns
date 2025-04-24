@@ -1,0 +1,39 @@
+body {
+    background: white;
+    color: black;
+}
+/* Icono de NS del navegador */
+.icono-ns {
+    width: 50px;
+    height: 50px;
+}
+/* Imagenes del carrusel */
+.c-img {
+    height: 100%;
+    object-fit: cover;
+}
+.c-item {
+    height: 80vh; /* 60% del alto de la ventana */
+}
+/* Responsividad */
+@media (max-width: 1200px) {
+    .c-item {
+        height: 40vh;
+    }
+}
+@media (max-width: 900px) {
+    .c-item {
+        height: 40vh;
+    }
+}
+@media (max-width: 720px) {
+    .c-item {
+        height: 40vh;
+    }
+}
+@media (max-width: 1000px) {
+    .ajustar {
+        width: 80%;
+        object-fit: cover;
+    }
+}
