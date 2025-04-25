@@ -1,4 +1,10 @@
-<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+<% if (user) { %>
+  
+<% } else { %>
+  <a href="/login">Iniciar sesión</a>
+<% } %>
+
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark sticky-top">
   <div class="container">
     <a class="navbar-brand" href="/">
       <img src="/img/ns-removebg-preview.png" class="icono-ns" alt="...">
@@ -12,13 +18,25 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link" href="/">Home</a>
+          <a class="nav-link" href="/">
+            Bienvenid@, <%= user.name %>!
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/about">Conocenos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/contact">Contacto</a>
+          <a class="nav-link" href="/catalogo">Catálogo</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/carrito" title="Carrito de compras">
+            <i class="bi bi-cart-fill"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout" title="Cerrar sesión">
+            <i class="bi bi-door-closed-fill"></i>
+          </a>
         </li>
       </ul>
     </div>
