@@ -12,12 +12,17 @@ router.get('/', (req, res) => {
 router.get('/about', (req, res) => res.render('about'))
 
 //router.get('/carrito', (req, res) => res.render('carrito'))
-router.get('/carrito', (req, res) => {
-    // Si no hay carrito en la sesión, lo inicializamos vacío
-    const carrito = req.session.carrito || []
+router.get('/carrito', async (req, res) => {
+    const usuario_id = req.session.user.id;
 
-    res.render('carrito', { productos })
-})
+    try {
+        const [rows] = await db.execute('SELECT * FROM carrito WHERE usuario_id = ?', [usuario_id]);
+        res.render('carrito', { carrito: rows });
+    } catch (err) {
+        console.error('Error al obtener el carrito:', err);
+        res.status(500).send('Error al cargar el carrito');
+    }
+});
 
 // Si los productos son estáticos y están definidos en otro archivo, mejor quita esta ruta de aquí
 // y deja la del archivo catalog.js

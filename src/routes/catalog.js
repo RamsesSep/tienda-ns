@@ -52,6 +52,7 @@ router.post('/add-to-cart', (req, res) => {
     res.redirect('/catalogo')
 })
 
+
 // 🟢 Ruta para mostrar carrito
 router.get('/carrito', (req, res) => {
     const carrito = req.session.cart || []

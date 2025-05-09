@@ -32,6 +32,8 @@ router.post('/login', (req, res) => {
 })
 
 
+
+
 // Para registrarse
 router.post('/register', (req, res) => {
   const { name, email, password } = req.body

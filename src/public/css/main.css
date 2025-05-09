@@ -20,6 +20,21 @@ body {
     width: 200px;
     height: 200px;
 }
+/* Imagen de que es el dtf y serigrafia */
+.img-dtf-seri {
+    width: 450px;
+    height: 550px;
+    border-radius: 30%;
+}
+/* Animación CSS para imagenes */
+.contenedor:hover .imagen {
+    -webkit-transform:scale(0.9);
+    transform:scale(0.9);
+    transition: 1s;
+}
+.contenedor {
+    overflow:hidden;
+}
 
 /* Responsividad */
 @media (max-width: 1200px) {

@@ -29,7 +29,10 @@ app.use(bodyParser.json())
 app.use(session({
     secret: 'secreto_super_seguro', // puedes ponerlo en .env
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 365 * 10 // 10 años en milisegundos
+    }
 }))
 
 // Middleware para pasar usuario a TODAS las vistas
