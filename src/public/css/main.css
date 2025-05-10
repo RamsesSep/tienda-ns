@@ -24,13 +24,13 @@ body {
 .img-dtf-seri {
     width: 450px;
     height: 550px;
-    border-radius: 30%;
+    border-radius: 20%;
 }
 /* Animación CSS para imagenes */
 .contenedor:hover .imagen {
-    -webkit-transform:scale(0.9);
-    transform:scale(0.9);
-    transition: 1s;
+    -webkit-transform:scale(0.99);
+    transform:scale(0.99);
+    transition: .5s;
 }
 .contenedor {
     overflow:hidden;

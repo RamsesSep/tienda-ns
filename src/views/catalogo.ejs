@@ -16,6 +16,7 @@
     <%- include('partials/navigation') %>
 
     <h1>Catálogo de Productos</h1>
+    <!--
     <div class="row">
         <% productos.forEach(producto=> { %>
             <div class="col-md-4">
@@ -39,16 +40,20 @@
                 </div>
             </div>
         <% }) %>
-    </div>
+    </div>-->
     <section class="vh-90 container pt-1 text-center d-flex justify-content-center align-items-center">
         <section class="py-5 bg-light ">
             <div class="container">
                 <div class="row align-items-center">
+
                     <% productos.forEach(producto=> { %>
                         <div class="col-md-4">
                             <div class="card mb-3">
-                                <img src="<%= producto.imagen %>" class="card-img-top" alt="<%= producto.nombre %>">
+
+                                <img src="<%= producto.imagen %>" class="card-img-top" alt="<%= producto.nombre %>" title="<%= producto.nombre %>">
+
                                 <div class="card-body">
+
                                     <h5 class="card-title">
                                         <%= producto.nombre %>
                                     </h5>
@@ -56,16 +61,29 @@
                                         <%= producto.descripcion %>
                                     </p>
                                     <p><strong>$<%= producto.precio %></strong></p>
+
                                     <form action="/add-to-cart" method="POST">
                                         <input type="hidden" name="id" value="<%= producto.id %>">
-                                        <input type="number" name="cantidad" value="1" min="1" class="form-control mb-2"
-                                            required>
+                                        <input type="number" name="cantidad" value="1" min="1" class="form-control mb-2" required>
+                                        <select id="talla" name="talla" class="form-select" aria-label="Default select example">
+                                            <option selected>Talla</option>
+                                            <option value="XCH">XCH</option>
+                                            <option value="CH">CH</option>
+                                            <option value="M">M</option>
+                                            <option value="G">G</option>
+                                            <option value="XG">XG</option>
+                                            <option value="XXG">XXG</option>
+                                            <option value="XXXG">XXXG</option>
+                                        </select>
+                                        <hr>
                                         <button class="btn btn-primary" type="submit">Agregar al carrito</button>
                                     </form>
+
                                 </div>
                             </div>
                         </div>
                     <% }) %>
+
                 </div>
             </div>
         </section>

@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
 router.get('/about', (req, res) => res.render('about'))
 
 //router.get('/carrito', (req, res) => res.render('carrito'))
+/*
 router.get('/carrito', async (req, res) => {
     const usuario_id = req.session.user.id;
 
@@ -23,11 +24,15 @@ router.get('/carrito', async (req, res) => {
         res.status(500).send('Error al cargar el carrito');
     }
 });
+*/
 
 // Si los productos son estáticos y están definidos en otro archivo, mejor quita esta ruta de aquí
 // y deja la del archivo catalog.js
 // router.get('/catalogo', (req, res) => { ... })
 
-router.get('/register', (req, res) => res.render('register'))
+//router.get('/register', (req, res) => res.render('register'))
+router.get('/register', (req, res) => {
+  res.render('register', { error: null }); 
+});
 
 export default router
