@@ -8,6 +8,27 @@ router.get('/login', (req, res) => {
   res.render('login', { error: null })
 })
 
+router.get('/admin', async (req, res) => {
+
+  try {
+    // Verificar que este logueado y sea administrador
+    if (!req.session.user || req.session.user.id != 7 || req.session.user.name !== 'administrador') {
+      return res.status(403).send('Acceso denegado');
+    }
+
+    // consulta a la base de datos
+    const [users] = await db.execute('SELECT * FROM users');
+
+    // renderiza el dashboard con los usuarios
+    res.render('admin', { users });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al cargar la vista de administrador')
+  }
+
+  //res.render('admin', { error: null })
+})
+
 // Ruta para procesar el login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -25,7 +46,11 @@ router.post('/login', async (req, res) => {
     if (results.length > 0) {
       req.session.user = results[0];
       console.log("usuario:", req.session.user.id, req.session.user.name);
-      res.redirect('/');
+      if (req.session.user.id == 7 && req.session.user.name == 'administrador') {
+        res.redirect('/admin')
+      } else {
+        res.redirect('/');
+      }
     } else {
       res.render('login', { error: 'Correo o contraseña incorrectos.' });
     }
@@ -34,10 +59,6 @@ router.post('/login', async (req, res) => {
     res.render('login', { error: 'Error del servidor.' });
   }
 });
-
-
-
-
 
 // Para registrarse
 router.post('/register', async (req, res) => {

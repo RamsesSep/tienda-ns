@@ -6,15 +6,16 @@ import db from '../db.js'
 const productos = [
     {
         id: 1,
-        nombre: 'Playera Personalizada',
-        descripcion: 'Playera de algodón 100% personalizada con tu diseño.',
+        nombre: 'Playera - color negro',
+        descripcion: 'Playera 100% algodón personalizada con tu diseño.',
         precio: 150,
-        imagen: '/img/playera1.jpg'
+        imagen: '/img/playera1.jpg',
+        tipo: 'ropa'
     },
     {
         id: 2,
-        nombre: 'Taza Estampada',
-        descripcion: 'Taza blanca de cerámica con diseño personalizado.',
+        nombre: 'Taza común - color rojo',
+        descripcion: 'Taza roja de cerámica con diseño personalizado.',
         precio: 80,
         imagen: '/img/taza1.jpg'
     },
@@ -23,7 +24,16 @@ const productos = [
         nombre: 'Sudadera Bordada',
         descripcion: 'Sudadera con tu logo bordado en alta calidad.',
         precio: 300,
-        imagen: '/img/sudadera1.jpg'
+        imagen: '/img/sudadera1.jpg',
+        tipo: 'ropa'
+    },
+    {
+        id: 4,
+        nombre: 'Playera verde',
+        descripcion: 'Playera del chico que asiste a todos los eventos wwe',
+        precio: 200,
+        imagen: '/img/camisa.jpg',
+        tipo: 'ropa'
     }
 ]
 
@@ -51,27 +61,16 @@ router.post('/add-to-cart', async (req, res) => {
         const producto = productos.find(p => p.id == id);
         if (!producto) return res.status(404).send('Producto no encontrado');
 
-        // Verificar si el producto con misma talla ya está en el carrito
-        const [rows] = await db.execute(
-            `SELECT * FROM carrito WHERE usuario_id = ? AND producto_id = ? AND talla = ?`,
-            [usuarioId, id, talla]
-        );
+        if (talla == null) {
+            console.log(' -------------------------------- La talla es nula');
+            console.log(' -------------------------------- Se subira sin talla')
 
-        if (rows.length > 0) {
-            // Ya existe: actualizar cantidad
-            const nuevoValor = parseInt(rows[0].cantidad) + parseInt(cantidad);
+            // Insertar nuevo registro
             await db.execute(
-                `UPDATE carrito SET cantidad = ? WHERE id = ?`,
-                [nuevoValor, rows[0].id]
-            );
-        } else {
-            // No existe: insertar nuevo registro
-            await db.execute(
-                `INSERT INTO carrito (usuario_id, producto_id, talla, nombre, descripcion, precio, imagen, cantidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                `INSERT INTO carrito (usuario_id, producto_id, nombre, descripcion, precio, imagen, cantidad) VALUES (?, ?, ?, ?, ?, ?, ?)`,
                 [
                     usuarioId,
                     producto.id,
-                    talla,
                     producto.nombre,
                     producto.descripcion,
                     producto.precio,
@@ -79,9 +78,43 @@ router.post('/add-to-cart', async (req, res) => {
                     parseInt(cantidad),
                 ]
             );
+
+            res.redirect('/catalogo');
+
+        } else {
+            // Verificar si el producto con misma talla ya está en el carrito
+            const [rows] = await db.execute(
+                `SELECT * FROM carrito WHERE usuario_id = ? AND producto_id = ? AND talla = ?`,
+                [usuarioId, id, talla]
+            );
+
+            if (rows.length > 0) {
+                // Ya existe: actualizar cantidad
+                const nuevoValor = parseInt(rows[0].cantidad) + parseInt(cantidad);
+                await db.execute(
+                    `UPDATE carrito SET cantidad = ? WHERE id = ?`,
+                    [nuevoValor, rows[0].id]
+                );
+            } else {
+                // No existe: insertar nuevo registro
+                await db.execute(
+                    `INSERT INTO carrito (usuario_id, producto_id, talla, nombre, descripcion, precio, imagen, cantidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                    [
+                        usuarioId,
+                        producto.id,
+                        talla,
+                        producto.nombre,
+                        producto.descripcion,
+                        producto.precio,
+                        producto.imagen,
+                        parseInt(cantidad),
+                    ]
+                );
+            }
+
+            res.redirect('/catalogo');
         }
 
-        res.redirect('/catalogo');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error al agregar al carrito');
@@ -89,26 +122,44 @@ router.post('/add-to-cart', async (req, res) => {
     }
 })
 
+router.post('/eliminar-producto', async (req,res) => {
+    // eliminaremos el producto del carrito de compras
+    //console.log('estoy tratando de eliminar')
+    try {
+
+        const { id } = req.body;
+        //console.log('Producto a eliminar tiene le ID:' + id)
+
+        // Borrar el registro
+        await db.execute('DELETE FROM carrito WHERE id = ?', [id]);
+
+        res.redirect('/carrito');
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al intentar eliminar producto');
+    }
+})
 
 // Ruta para mostrar carrito
 router.get('/carrito', async (req, res) => {
-  if (!req.session.user) {
-    return res.redirect('/login');
-  }
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
 
-  const usuarioId = req.session.user.id;
+    const usuarioId = req.session.user.id;
 
-  try {
-    const [carrito] = await db.execute(
-      'SELECT * FROM carrito WHERE usuario_id = ?',
-      [usuarioId]
-    );
+    try {
+        const [carrito] = await db.execute(
+            'SELECT * FROM carrito WHERE usuario_id = ?',
+            [usuarioId]
+        );
 
-    res.render('carrito', { carrito });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error al cargar el carrito');
-  }
+        res.render('carrito', { carrito });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al cargar el carrito');
+    }
 });
 
 
